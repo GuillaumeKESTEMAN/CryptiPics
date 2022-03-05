@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import ErrorMessage from "../Messages/Errors/ErrorMessage";
 
-function InputPicture() {
+function InputPicture(props) {
     const formats = ["png","jpeg","jpg"];
 
-    const [picture, setPicture] = useState(false);
-    const [pictureShow, setPictureShow] = useState("#");
     const [errorMessage, setSetErrorMessage] = useState(false);
     const [errorMessageState, setSetErrorMessageState] = useState(false);
     const fileLimitSize = 1;    // en Mo
@@ -14,15 +12,14 @@ function InputPicture() {
         const currentFile = file.target.files[0];
         console.log(currentFile);
         if(currentFile.name.endsWith(".jpg") || currentFile.name.endsWith(".png")) {
-            if(currentFile.size < fileLimitSize * 1000000) {
+            if(currentFile.size < fileLimitSize * 2000000) {
                 if(errorMessageState) {
                     setSetErrorMessageState(false);
                 }
-                setPicture(currentFile);
 
                 var fr = new FileReader();
                 fr.onload = function (e) {
-                    setPictureShow(e.target.result);
+                    props.setPicture(e.target.result);
                 };
                 fr.readAsDataURL(currentFile);
             } else {
@@ -32,7 +29,7 @@ function InputPicture() {
                 setSetErrorMessage("Votre image est trop volumineuse");
             }
         } else {
-            setPictureShow("#");
+            props.setPicture("#");
 
             if(!errorMessageState) {
                 setSetErrorMessageState(true);
@@ -51,7 +48,7 @@ function InputPicture() {
                 return value;
             })} onInput={verifFile} />
             {
-                pictureShow !== "#" && (<img src={pictureShow} />)
+                props.picture !== "#" && (<img src={props.picture} />)
             }
             {
                 errorMessageState && (<ErrorMessage message={errorMessage}/>)

@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import ErrorMessage from "../Messages/Errors/ErrorMessage";
 
 function InputPicture(props) {
-    const formats = ["png","jpeg","jpg"];
+    const formats = ["png", "jpeg", "jpg"];
 
-    const [errorMessage, setSetErrorMessage] = useState(false);
+    const [errorMessage, setSetErrorMessage] = useState([]);
     const [errorMessageState, setSetErrorMessageState] = useState(false);
-    const fileLimitSize = 1;    // en Mo
+    const fileLimitSize = 1; // en Mo
 
     const verifFile = (file) => {
         const currentFile = file.target.files[0];
         console.log(currentFile);
-        if(currentFile.name.endsWith(".jpg") || currentFile.name.endsWith(".png")) {
-            if(currentFile.size < fileLimitSize * 2000000) {
-                if(errorMessageState) {
+        if (currentFile.name.endsWith(".jpg") || currentFile.name.endsWith(".png")) {
+            if (currentFile.size < fileLimitSize * 2000000) {
+                if (errorMessageState) {
                     setSetErrorMessageState(false);
                 }
 
@@ -23,27 +23,27 @@ function InputPicture(props) {
                 };
                 fr.readAsDataURL(currentFile);
             } else {
-                if(!errorMessageState) {
+                if (!errorMessageState) {
+                    setSetErrorMessage(["Votre image est trop volumineuse"]);
                     setSetErrorMessageState(true);
                 }
-                setSetErrorMessage("Votre image est trop volumineuse");
             }
         } else {
             props.setPicture("#");
 
-            if(!errorMessageState) {
+            if (!errorMessageState) {
+                setSetErrorMessage(["Votre format d'image n'est pas utilisable", "les formats possibles sont :" + formats.map((value) => {
+                    value = " ." + value;
+                    return value;
+                })]);
                 setSetErrorMessageState(true);
             }
-            setSetErrorMessage("Votre format d'image n'est pas utilisable, les formats possibles sont :" + formats.map((value, index, array) => {
-                value = " ." + value;
-                return value;
-            }));
         }
     }
 
     return (
-        <div className="InputPicture">
-            <input type={"file"} accept={formats.map((value, index, array) => {
+        <div className="InputPicture  w-[20rem] mx-[1rem] flex flex-col justify-center items-center">
+            <input className='' type={"file"} accept={formats.map((value, index, array) => {
                 value = "image/" + value;
                 return value;
             })} onInput={verifFile} />
@@ -51,7 +51,7 @@ function InputPicture(props) {
                 props.picture !== "#" && (<img src={props.picture} />)
             }
             {
-                errorMessageState && (<ErrorMessage message={errorMessage}/>)
+                errorMessageState && (<ErrorMessage messages={errorMessage} />)
             }
         </div>
     );

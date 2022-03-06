@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-exports.Picture = class Picture {
+exports.Crypt = class Crypt {
   constructor (options) {
     this.options = options || {};
   }

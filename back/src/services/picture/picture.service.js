@@ -1,6 +1,9 @@
 // Initializes the `picture` service on path `/picture`
-const { Picture } = require('./picture.class');
-const hooks = require('./picture.hooks');
+const { Crypt } = require('./crypt/crypt.class');
+const cryptHooks = require('./crypt/crypt.hooks');
+
+const { Decrypt } = require('./decrypt/decrypt.class');
+const decryptHooks = require('./decrypt/decrypt.hooks');
 
 module.exports = function (app) {
   const options = {
@@ -8,12 +11,14 @@ module.exports = function (app) {
   };
 
   // Initialize our service with any options it requires
-  app.use('/picture', new Picture(options, app));
-  // app.use('/picture/crypt', new Picture(options, app));
-  // app.use('/picture/decrypt', new Picture(options, app));
+  app.use('/picture/crypt', new Crypt(options, app));
+  app.use('/picture/decrypt', new Decrypt(options, app));
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('picture');
+  const cryptService = app.service('picture/crypt');
+  cryptService.hooks(cryptHooks);
 
-  service.hooks(hooks);
+  const decryptService = app.service('picture/decrypt');
+  decryptService.hooks(cryptHooks);
+
 };

@@ -1,3 +1,6 @@
+storage/key/*
+storage/crypted/*
+storage/decrypted/*
 # Logs
 logs
 *.log

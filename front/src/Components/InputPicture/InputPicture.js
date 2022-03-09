@@ -6,7 +6,7 @@ function InputPicture(props) {
 
     const [errorMessage, setSetErrorMessage] = useState([]);
     const [errorMessageState, setSetErrorMessageState] = useState(false);
-    const fileLimitSize = 1; // en Mo
+    const fileLimitSize = 100; // en Mo
 
     const verifFile = (file) => {
         const currentFile = file.target.files[0];
@@ -43,7 +43,7 @@ function InputPicture(props) {
 
     return (
         <div className="InputPicture  w-[20rem] mx-[1rem] flex flex-col justify-center items-center">
-            <input className='' type={"file"} accept={formats.map((value, index, array) => {
+            <input className='' type={"file"} accept={formats.map((value) => {
                 value = "image/" + value;
                 return value;
             })} onInput={verifFile} />

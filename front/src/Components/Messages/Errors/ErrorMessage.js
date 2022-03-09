@@ -6,8 +6,7 @@ import React from 'react';
  * @param {array<string> | undefined} props.messages Tableau de plusieurs messages
  */
 function ErrorMessage(props) {
-    console.log("errgot",props)
-
+    
     return (
         <>
             {props.message &&

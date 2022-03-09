@@ -19,6 +19,6 @@ module.exports = function (app) {
   cryptService.hooks(cryptHooks);
 
   const decryptService = app.service('picture/decrypt');
-  decryptService.hooks(cryptHooks);
+  decryptService.hooks(decryptHooks);
 
 };

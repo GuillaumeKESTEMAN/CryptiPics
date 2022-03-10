@@ -1,9 +1,9 @@
-const Jimp = require('Jimp');
+const Jimp = require('jimp');
 const fs = require('fs');
 
 /**
  * Get RGB of the key
- * @param {number[][]} aK Array of the key 
+ * @param {number[][]} aK Array of the key
  * @param {number} x x
  * @param {number} y y
  * @returns {number[]} [R,G,B] values
@@ -11,7 +11,7 @@ const fs = require('fs');
 const getRGBKey = (aK, x, y) => {
   let j = 0;
   while (!aK[y - (aK.length * j)]) { j += 1 }
-  let i = 0
+  let i = 0;
   while (!aK[y - (aK.length * j)][x - (aK[y - (aK.length * j)].length * i)]) { i += 1 }
 
   return aK[y - (aK.length * j)][x - (aK[y - (aK.length * j)].length * i)]?.split(',');
@@ -46,8 +46,9 @@ const sumRGB = (col, key) => {
 }
 
 exports.Crypt = class Crypt {
-  constructor(options) {
+  constructor(options, app) {
     this.options = options || {};
+    this.app = app;
   }
 
   async find(params) {
@@ -61,7 +62,7 @@ exports.Crypt = class Crypt {
   async create(data, params) {
     let pixelsPicture = [];
 
-    let selectedPicture = await Jimp.read(Buffer.from(data.data.split(',')[1], 'base64'))
+    let selectedPicture = await Jimp.read(Buffer.from(data.picture.split(',')[1], 'base64'))
     let width = selectedPicture.bitmap.width;
     let height = selectedPicture.bitmap.height;
     for (let y = 0; y < height; y++) {
@@ -73,8 +74,10 @@ exports.Crypt = class Crypt {
       pixelsPicture.push(rowPixels);
     }
 
-    const file = fs.readFileSync('storage/key/key.json', 'utf8')
-    let pixelsKey = JSON.parse(file).data;
+    let pixelsKey;
+    await this.app.service('key').create({width: width, height: height}).then((data) => {
+      pixelsKey = data.pixels;
+    })
     let cryptedImage = new Jimp(pixelsPicture[0].length, pixelsPicture.length);
     pixelsPicture.forEach((rowPixels, y) => {
       rowPixels.forEach((pixel, x) => {
@@ -96,7 +99,24 @@ exports.Crypt = class Crypt {
         cryptedImage.setPixelColor(color, x, y)
       })
     });
-    cryptedImage.write('storage/crypted/cryptedimg.png')
+    cryptedImage.write('storage/crypted/cryptedimg.png');
+
+    new Jimp(pixelsKey.length, pixelsKey[0].length, (err, image) => {
+      if (err) { throw err; }
+      pixelsKey.forEach((rowPixels, y) => {
+        rowPixels.forEach((pixel, x) => {
+          var rgb = pixel.split(',');
+          var r = Number(rgb[0]);
+          var g = Number(rgb[1]);
+          var b = Number(rgb[2]);
+          var color = Jimp.rgbaToInt(r, g, b, 255);
+          image.setPixelColor(color, x, y)
+        })
+      })
+      image.write('storage/crypted/keyimg.png', (err) => {
+        if (err) { throw err; }
+      });
+    });
 
     return { success: true };
   }

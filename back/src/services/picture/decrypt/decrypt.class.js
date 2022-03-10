@@ -1,9 +1,9 @@
-const Jimp = require('Jimp');
+const Jimp = require('jimp');
 const fs = require('fs');
 
 /**
  * Get RGB of the key
- * @param {number[][]} aK Array of the key 
+ * @param {number[][]} aK Array of the key
  * @param {number} x x
  * @param {number} y y
  * @returns {number[]} [R,G,B] values
@@ -55,7 +55,7 @@ exports.Decrypt = class Decrypt {
   async create(data, params) {
     let pixelsDecrypted = [];
 
-    let selectedPicture = await Jimp.read(Buffer.from(data.data.split(',')[1], 'base64'))
+    let selectedPicture = await Jimp.read(Buffer.from(data.picture.split(',')[1], 'base64'))
     let width = selectedPicture.bitmap.width;
     let height = selectedPicture.bitmap.height;
     for (let y = 0; y < height; y++) {

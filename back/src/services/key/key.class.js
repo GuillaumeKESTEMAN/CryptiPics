@@ -1,4 +1,4 @@
-const Jimp = require('Jimp');
+const Jimp = require('jimp');
 const fs = require('fs');
 
 exports.Key = class Key {
@@ -17,22 +17,27 @@ exports.Key = class Key {
   }
 
   async create(data, params) {
-    const defaultKeySize = 500;
-    
-    let pixels = []
-    for (let y = 0; y < defaultKeySize; y++) {
-      let rowPixels = [];
-      for (let x = 0; x < defaultKeySize; x++) {
-        const r = Number(Math.floor(Math.random() * 255) + 1);
-        const g = Number(Math.floor(Math.random() * 255) + 1);
-        const b = Number(Math.floor(Math.random() * 255) + 1);
-        rowPixels.push(`${r},${g},${b}`);
-      }
-      pixels.push(rowPixels)
-    }
-    fs.writeFileSync('storage/key/key.json', JSON.stringify({ data: pixels }))
+    if(data.width && data.height) {
+      const width = data.width;
+      const height = data.height;
 
-    return { success: true };
+      let pixels = [];
+      for (let y = 0; y < width; y++) {
+        let rowPixels = [];
+        for (let x = 0; x < height; x++) {
+          const r = Number(Math.floor(Math.random() * 254) + 1);
+          const g = Number(Math.floor(Math.random() * 254) + 1);
+          const b = Number(Math.floor(Math.random() * 254) + 1);
+          rowPixels.push(`${r},${g},${b}`);
+        }
+        pixels.push(rowPixels);
+      }
+      // fs.writeFileSync('storage/key/key.json', JSON.stringify({ data: pixels }))
+
+      return { success: true, pixels: pixels };
+    } else {
+      return { success: false, error: "Missing parameters, need 'width' and 'height' parameters" };
+    }
   }
 
   async update(id, data, params) {

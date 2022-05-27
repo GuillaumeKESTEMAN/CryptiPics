@@ -43,3 +43,49 @@ $ feathers help                           # Show all commands
 ## Help
 
 For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).
+
+
+## Our API
+(*) for necessary and (+) for optional
+
+### key :
+find :
+```
+(+) name : name of the json file to find
+```
+
+create :
+```
+(+) width : width of the key or 500 as default
+(+) height : height of the key or 500 as default
+
+(+) saveKey : boolean to know if dev want to save the key
+(+) name : name of the json file to save (if saveKey is true)
+```
+### crypt :
+create : (password or key is necessary)
+```
+(*) picture : picture to encrypt
+
+(+) useKey : key to use for the encryption
+(+) useStorageKey : boolean to know if use key in storage
+(+) saveKey : boolean to know if the key will be save
+(+) keyName : key file name in storage for useStorageKey or saveKey
+
+(+) password : password to encrypt the picture
+(+) creator : name of the creator (used as salt for the password hash)
+(+) timeToEncrypt : time wanted to encrypt the picture
+```
+### decrypt :
+create : (password or key is necessary)
+```
+(*) picture : picture to decrypt
+
+(+) key : key to use for the decryption
+(+) useStorageKey : boolean to know if use key in storage
+(+) keyName : key file name in storage for useStorageKey
+
+(+) password : password to decrypt the picture
+(+) creator : name of the creator (used as salt for the password hash)
+(+) timeToDecrypt : time wanted to decrypt the picture
+```

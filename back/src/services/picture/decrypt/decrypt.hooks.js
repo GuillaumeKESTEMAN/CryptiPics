@@ -2,7 +2,8 @@ const { GeneralError } = require("@feathersjs/errors");
 const { blockService } = require("../../blockedService");
 
 const beforeCreateCheckData = (ctx) => {
-  if (!ctx.data.picture) throw new GeneralError("Donnée manquante: data.picture", ctx.data);
+  if (!ctx.data.picture) throw new GeneralError("Donnée manquante: picture", ctx.data);
+  if (!ctx.data.password && !ctx.data.key && !ctx.data.useStorageKey) throw new GeneralError("Donnée manquante: password or key", ctx.data);
 }
 
 module.exports = {
